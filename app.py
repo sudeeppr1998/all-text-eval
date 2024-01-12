@@ -14,44 +14,22 @@ def get_error_arrays(alignments, reference, hypothesis):
         elif chunk.type == 'delete':
             deletion.extend(list(range(chunk.ref_start_idx, chunk.ref_end_idx)))
         elif chunk.type == 'substitute':
-            for i in range(chunk.ref_start_idx, chunk.ref_end_idx):
-                substitution.append({
-                    "removed": hypothesis[i],
-                    "replaced": reference[i]
-                })
+            # for i in range(chunk.ref_start_idx, chunk.ref_end_idx):
+            refslice = slice(chunk.ref_start_idx, chunk.ref_end_idx)
+            hyposlice = slice(chunk.hyp_start_idx, chunk.hyp_end_idx)
+
+            substitution.append({
+                "removed": hypothesis[hyposlice],
+                "replaced": reference[refslice]
+            })
 
     insertion_chars = [hypothesis[i] for i in insertion]
     deletion_chars = [reference[i] for i in deletion]
-    #substitution_chars = [reference[i] for i in substitution]
 
     return {
         'insertion': insertion_chars,
         'deletion': deletion_chars,
         'substitution': substitution
-    }
-    insertion = []
-    deletion = []
-    substitution_pairs = []
-
-    for chunk in alignments[0]:
-        if chunk.type == 'insertion':
-            insertion.extend(list(range(chunk.hyp_start_idx, chunk.hyp_end_idx)))
-        elif chunk.type == 'deletion':
-            deletion.extend(list(range(chunk.ref_start_idx, chunk.ref_end_idx)))
-        elif chunk.type == 'substitute':
-            for i in range(chunk.ref_start_idx, chunk.ref_end_idx):
-                substitution_pairs.append({
-                    "removed": reference[i],
-                    "replaced": hypothesis[i]
-                })
-
-    insertion_chars = [hypothesis[i] for i in insertion]
-    deletion_chars = [reference[i] for i in deletion]
-
-    return {
-        'insertion': insertion_chars,
-        'deletion': deletion_chars,
-        'substitution_pairs': substitution_pairs
     }
 
 @app.route('/getTextMatrices', methods=['POST'])
