@@ -8,7 +8,6 @@ import jiwer
 
 app = Flask(__name__)
 
-
 def get_error_arrays(alignments, reference, hypothesis, base64string):
     insertion = []
     deletion = []
