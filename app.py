@@ -325,6 +325,17 @@ def compute_errors():
         "construct_text":construct_text
     })
 
+@app.route('/getPhonemes', methods=['POST'])
+def get_phonemes():
+    data = request.get_json()
+    text = data.get('text')
+
+    phonemesList = split_into_phonemes(p.convert(text))
+    uniquePhonemesList = list(dict.fromkeys(phonemesList))
+
+    return jsonify({
+        "phonemes": uniquePhonemesList
+    })
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=False)
